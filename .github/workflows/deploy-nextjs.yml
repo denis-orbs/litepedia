@@ -1,0 +1,30 @@
+name: Deploy Next.js to Google Cloud Functions
+
+on:
+  push:
+    branches:
+      - main # Replace 'main' with your default branch name if different
+      - appdir
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+      
+    - id: 'deploy-nextjs'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'nextjs'
+        runtime: 'nodejs16'
+        entry_point: 'handler'
+        env_vars: 'NODE_ENV=${{ secrets.NODE_ENV }},APP_URL=${{ secrets.APP_URL }},G_API_KEY=${{ secrets.G_API_KEY }},G_AUTH_DOMAIN=${{ secrets.G_AUTH_DOMAIN }},G_APP_ID=${{ secrets.G_APP_ID }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }},G_MSG_SENDER_ID=${{ secrets.G_MSG_SENDER_ID }},G_PROJECT_ID=${{ secrets.G_PROJECT_ID }},G_STORAGE_BUCKET=${{ secrets.G_STORAGE_BUCKET }}'
