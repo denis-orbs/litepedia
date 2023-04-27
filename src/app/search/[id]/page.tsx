@@ -25,13 +25,12 @@ async function Page(searchParams: any) {
   let title = res.title.replaceAll("_", " ");
   title = title[0].toUpperCase() + title.slice(1).toLowerCase();
   return (
-    <div className="search-page">
-      <SearchInput />
+    <>
       <div className="container search-page-content">
         <h2 className="search-page-title">{title}</h2>
         <p className="search-page-description">{res.description}</p>
       </div>
-    </div>
+    </>
   );
 }
 
